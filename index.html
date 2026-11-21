@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tienda Fresh Check</title>
+<meta name="description" content="Tienda Fresh Check: indicador de tiempo y temperatura para recipientes herméticos. Si está verde, está bien.">
+<meta name="author" content="Fsinay">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23F5F0E1' stroke='%232E5E2A' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%233F8F3A'/%3E%3C/svg%3E">
+<style>
+:root{
+  --verde:#2F5D46; --verde-2:#3F8F3A; --verde-claro:#E3ECE5; --crema:#F5F7F2; --crema-2:#E8EEE6; --acento:#2B7A9B; --acento-osc:#215F79; --acento-claro:#E1EEF3;
+  --tinta:#1E2B24; --gris:#56635B; --borde:#D3DDD5; --amarillo:#E3B427; --rojo:#C8412F; --blanco:#fff;
+  --radio:16px; --sombra:0 8px 24px rgba(31,42,28,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--tinta);background:var(--crema);line-height:1.55}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--verde)}
+.contenedor{max-width:1120px;margin:0 auto;padding:0 20px}
+button{font:inherit;cursor:pointer}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;font-weight:600;background:var(--acento);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{background:var(--acento-osc);transform:translateY(-1px)}
+.btn.sec{background:transparent;color:var(--verde);border:2px solid var(--verde)}
+.btn.sec:hover{background:var(--verde-claro)}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+
+/* encabezado */
+header.barra{position:sticky;top:0;z-index:40;background:rgba(245,247,242,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--borde)}
+.barra .contenedor{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--verde);font-weight:800;font-size:1.25rem;letter-spacing:-.3px}
+.marca .disco{width:34px;height:34px;border-radius:50%;background:var(--crema);border:5px solid var(--verde);display:grid;place-items:center}
+.marca .disco i{width:10px;height:10px;border-radius:50%;background:var(--verde-2);display:block}
+nav.menu{display:flex;gap:22px}
+nav.menu a{text-decoration:none;color:var(--tinta);font-weight:500}
+nav.menu a:hover{color:var(--verde)}
+.carrito-btn{position:relative;background:var(--acento);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:600;display:flex;gap:8px;align-items:center}
+.carrito-btn .cuenta{background:#fff;color:var(--acento-osc);border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:.8rem;font-weight:800;padding:0 6px}
+@media (max-width:760px){nav.menu{display:none}}
+
+/* portada */
+.portada{padding:56px 0 40px}
+.portada .contenedor{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center}
+.etiqueta{display:inline-block;background:var(--verde-claro);color:var(--verde);font-weight:700;border-radius:999px;padding:6px 14px;font-size:.85rem}
+.portada h1{font-size:clamp(2rem,4.6vw,3.3rem);line-height:1.08;margin:14px 0 12px;color:var(--verde);letter-spacing:-1px}
+.portada p.lead{font-size:1.12rem;color:var(--gris);margin:0 0 24px;max-width:520px}
+.portada .acciones{display:flex;gap:12px;flex-wrap:wrap}
+.portada .foto{border-radius:24px;overflow:hidden;box-shadow:var(--sombra);background:#fff}
+.semaforo{display:flex;gap:18px;margin-top:26px;flex-wrap:wrap}
+.semaforo div{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--gris);font-size:.95rem}
+.semaforo span{width:16px;height:16px;border-radius:50%}
+@media (max-width:860px){.portada .contenedor{grid-template-columns:1fr}}
+
+section{padding:56px 0}
+section h2{font-size:clamp(1.6rem,3vw,2.2rem);color:var(--verde);margin:0 0 8px;letter-spacing:-.5px}
+section .sub{color:var(--gris);margin:0 0 28px;max-width:640px}
+
+/* productos */
+.rejilla{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media (max-width:900px){.rejilla{grid-template-columns:1fr}}
+.tarjeta{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:22px;display:flex;flex-direction:column;box-shadow:0 2px 0 rgba(0,0,0,.02)}
+.tarjeta .icono{aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:var(--crema-2);margin-bottom:16px}
+.tarjeta .icono img{width:100%;height:100%;object-fit:cover}
+.tarjeta .icono .discos{display:flex;gap:8px}
+.mini{width:38px;height:38px;border-radius:50%;background:var(--crema);border:5px solid var(--verde);display:grid;place-items:center}
+.mini i{width:10px;height:10px;border-radius:50%;display:block}
+.tarjeta h3{margin:0 0 4px;font-size:1.25rem}
+.tarjeta .que{color:var(--gris);margin:0 0 14px;flex:1}
+.precio{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.precio .actual{font-size:1.7rem;font-weight:800;color:var(--verde)}
+.precio .antes{text-decoration:line-through;color:var(--gris)}
+.precio .unidad{color:var(--gris);font-size:.9rem}
+.cantidad{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cantidad button{width:34px;height:34px;border-radius:50%;border:1px solid var(--borde);background:var(--crema);font-weight:700}
+.cantidad input{width:52px;text-align:center;border:1px solid var(--borde);border-radius:10px;padding:6px;font:inherit}
+.aviso-promo{background:var(--acento-claro);border:1px solid #b9d6e2;border-radius:12px;padding:12px 16px;margin-bottom:22px;color:var(--acento-osc);font-weight:600;display:none}
+
+/* cómo funciona */
+.fondo-blanco{background:#fff;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde)}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+@media (max-width:860px){.dos{grid-template-columns:1fr}}
+.colores{display:grid;gap:12px}
+.color{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;background:var(--crema);border-radius:12px;padding:14px 16px}
+.color .punto{width:44px;height:44px;border-radius:50%;border:6px solid var(--verde);background:var(--crema);display:grid;place-items:center}
+.color .punto i{width:14px;height:14px;border-radius:50%;display:block}
+.color b{display:block}
+.color small{color:var(--gris)}
+.pasos{counter-reset:paso;list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.pasos li{counter-increment:paso;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.pasos li::before{content:counter(paso);width:34px;height:34px;border-radius:50%;background:var(--acento);color:#fff;display:grid;place-items:center;font-weight:700}
+.nota{font-size:.85rem;color:var(--gris);margin-top:14px}
+.foto-redonda{border-radius:20px;overflow:hidden;box-shadow:var(--sombra)}
+
+.proximo{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center}
+@media (max-width:860px){.proximo{grid-template-columns:1fr}}
+
+/* carrito lateral */
+.velo{position:fixed;inset:0;background:rgba(20,28,18,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+.velo.abierto{opacity:1;pointer-events:auto}
+aside.carrito{position:fixed;top:0;right:0;height:100%;width:min(430px,100%);background:#fff;z-index:70;transform:translateX(105%);transition:transform .25s,visibility .25s;visibility:hidden;display:flex;flex-direction:column}
+aside.carrito.abierto{transform:none;visibility:visible;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.carrito .cab{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--borde)}
+.carrito .cab h3{margin:0;color:var(--verde)}
+.cerrar{border:0;background:var(--crema);width:36px;height:36px;border-radius:50%;font-size:1.2rem}
+.carrito .lineas{flex:1;overflow:auto;padding:10px 20px}
+.linea{display:grid;grid-template-columns:1fr auto;gap:6px;padding:12px 0;border-bottom:1px dashed var(--borde)}
+.linea .n{font-weight:600}
+.linea .ctl{display:flex;gap:8px;align-items:center;color:var(--gris);font-size:.92rem}
+.linea .ctl button{width:28px;height:28px;border-radius:50%;border:1px solid var(--borde);background:var(--crema)}
+.linea .quitar{border:0;background:none;color:var(--rojo);font-size:.85rem;padding:0}
+.vacio{color:var(--gris);text-align:center;padding:40px 0}
+.totales{padding:16px 20px;border-top:1px solid var(--borde);background:var(--crema)}
+.totales .fila{display:flex;justify-content:space-between;margin:4px 0}
+.totales .fila.desc{color:var(--verde-2);font-weight:600}
+.totales .fila.total{font-size:1.25rem;font-weight:800;color:var(--verde);margin-top:8px}
+.totales .btn{width:100%;margin-top:12px}
+
+/* modal pedido */
+dialog{border:0;border-radius:20px;padding:0;width:min(640px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,28,18,.55)}
+.modal{padding:26px 26px 22px}
+.modal h3{margin:0 0 4px;color:var(--verde);font-size:1.4rem}
+.modal .sub{color:var(--gris);margin:0 0 18px}
+form .campos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form .campos .ancho{grid-column:1/-1}
+@media (max-width:560px){form .campos{grid-template-columns:1fr}}
+label{display:block;font-weight:600;font-size:.9rem;margin-bottom:4px}
+input,select,textarea{width:100%;border:1px solid var(--borde);border-radius:10px;padding:10px 12px;font:inherit;background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acento);border-color:transparent}
+.error-campo{color:var(--rojo);font-size:.8rem;min-height:1em;display:block}
+.resumen{background:var(--crema);border-radius:12px;padding:12px 14px;margin:16px 0;font-size:.95rem}
+.resumen .fila{display:flex;justify-content:space-between}
+.modal .acciones{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.chk{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:.88rem;color:var(--gris)}
+.chk input{width:auto;margin-top:4px}
+.ok-icono{width:64px;height:64px;border-radius:50%;background:var(--verde-claro);display:grid;place-items:center;margin-bottom:12px}
+.ok-icono i{width:24px;height:24px;border-radius:50%;background:var(--verde-2);display:block}
+.num-pedido{font-family:Consolas,monospace;font-size:1.15rem;background:var(--crema);padding:6px 12px;border-radius:8px;display:inline-block;font-weight:700;color:var(--verde)}
+.desarrollo{margin-top:18px;border:2px dashed var(--amarillo);background:#FFF8E1;border-radius:14px;padding:14px 16px}
+.desarrollo b{color:#8A6A00}
+
+footer{background:var(--verde);color:#E8F0E2;padding:34px 0;margin-top:20px;font-size:.92rem}
+footer .contenedor{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:#fff}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;opacity:0;transition:.25s;z-index:90;pointer-events:none}
+.toast.ver{opacity:1;transform:translateX(-50%)}
+
+/* ---- Transiciones y microinteracciones ---- */
+:root{--ease:cubic-bezier(.22,.61,.36,1);--ease-salida:cubic-bezier(.4,0,1,1)}
+.btn{transition:transform .18s var(--ease),background-color .18s var(--ease),box-shadow .18s var(--ease)}
+.btn:hover{box-shadow:0 6px 16px rgba(43,122,155,.25)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn:focus-visible,.carrito-btn:focus-visible,.cerrar:focus-visible,nav.menu a:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
+nav.menu a{position:relative;transition:color .2s var(--ease)}
+nav.menu a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--acento);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+nav.menu a:hover::after,nav.menu a.activo::after{transform:scaleX(1)}
+nav.menu a.activo{color:var(--verde)}
+header.barra{transition:box-shadow .25s var(--ease)}
+header.barra.con-sombra{box-shadow:0 4px 18px rgba(30,43,36,.08)}
+.carrito-btn{transition:background-color .18s var(--ease),transform .18s var(--ease)}
+.carrito-btn:hover{background:var(--acento-osc)}
+.carrito-btn .cuenta.salto{animation:salto .45s var(--ease)}
+@keyframes salto{0%{transform:scale(1)}35%{transform:scale(1.45)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.tarjeta{transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease)}
+.tarjeta:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(30,43,36,.10);border-color:#c3d2c6}
+.tarjeta .icono img,.foto img,.foto-redonda img{transition:transform .6s var(--ease)}
+.tarjeta:hover .icono img,.foto:hover img,.foto-redonda:hover img{transform:scale(1.04)}
+.foto,.foto-redonda{overflow:hidden}
+.cantidad button,.linea .ctl button{transition:background-color .15s var(--ease),transform .12s var(--ease)}
+.cantidad button:hover,.linea .ctl button:hover{background:var(--acento-claro)}
+.cantidad button:active,.linea .ctl button:active{transform:scale(.9)}
+.btn.agregado{background:var(--verde-2)}
+.velo{transition:opacity .25s var(--ease)}
+aside.carrito{transition:transform .32s var(--ease),visibility .32s}
+.linea{animation:entra .28s var(--ease) both}
+@keyframes entra{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+dialog[open]{animation:aparece .28s var(--ease)}
+dialog[open]::backdrop{animation:fundido .28s var(--ease)}
+@keyframes aparece{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes fundido{from{opacity:0}to{opacity:1}}
+#pasoOk:not([hidden]){animation:aparece .35s var(--ease)}
+.ok-icono{animation:pulso 1.2s var(--ease) .2s 2}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 0 rgba(63,143,58,.35)}50%{box-shadow:0 0 0 12px rgba(63,143,58,0)}}
+input,select,textarea{transition:border-color .18s var(--ease),box-shadow .18s var(--ease)}
+.error-campo{transition:opacity .2s var(--ease)}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);animation:sacudir .3s var(--ease)}
+@keyframes sacudir{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.revelar{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.revelar.visible{opacity:1;transform:none}
+.semaforo span{animation:latido 3s var(--ease) infinite}
+.semaforo div:nth-child(2) span{animation-delay:1s}
+.semaforo div:nth-child(3) span{animation-delay:2s}
+@keyframes latido{0%,70%,100%{transform:scale(1)}80%{transform:scale(1.3)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.revelar{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenedor">
+    <a class="marca" href="#inicio" aria-label="Fresh Check, inicio"><img src="assets/logo.png" alt="Fresh Check" width="480" height="238" style="height:44px;width:auto"></a>
+    <nav class="menu">
+      <a href="#productos">Productos</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#proximamente">Próximamente</a>
+    </nav>
+    <button class="carrito-btn" id="abrirCarrito" aria-label="Abrir carrito">Carrito <span class="cuenta" id="cuenta">0</span></button>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="portada">
+    <div class="contenedor">
+      <div>
+        <span class="etiqueta">Tienda en línea oficial</span>
+        <h1>Si está verde,<br>está bien.</h1>
+        <p class="lead">Fresh Check es un indicador de tiempo y temperatura que se coloca con imanes en tus recipientes herméticos. Te ayuda a saber qué comer primero y te avisa si la comida estuvo expuesta al calor. Sin baterías, sin celular, sin internet.</p>
+        <div class="acciones">
+          <a class="btn" href="#productos">Ver productos</a>
+          <a class="btn sec" href="#como-funciona">Cómo funciona</a>
+        </div>
+        <div class="semaforo">
+          <div><span style="background:var(--verde-2)"></span>Recién guardado</div>
+          <div><span style="background:var(--amarillo)"></span>Cómelo pronto</div>
+          <div><span style="background:var(--rojo)"></span>Revísalo</div>
+        </div>
+      </div>
+      <div class="foto"><img src="assets/hero.jpg" alt="Recipientes con indicadores Fresh Check en verde, amarillo y rojo dentro de una refrigeradora" width="1400" height="1050"></div>
+    </div>
+  </section>
+
+  <section id="productos" class="fondo-blanco">
+    <div class="contenedor">
+      <h2>Productos</h2>
+      <p class="sub">Precios con IVA incluido. Son los mismos en los puntos de venta físicos y en esta tienda en línea.</p>
+      <div class="aviso-promo" id="avisoPromo"></div>
+      <div class="rejilla" id="rejilla"></div>
+    </div>
+  </section>
+
+  <section id="como-funciona">
+    <div class="contenedor">
+      <h2>Cómo funciona</h2>
+      <p class="sub">La pastilla cambia de color con los días y más rápido si la comida se calienta. Los colores siguen la recomendación del USDA para comida preparada: de 3 a 4 días en refrigeradora.</p>
+      <div class="dos">
+        <div>
+          <div class="colores">
+            <div class="color"><span class="punto"><i style="background:var(--verde-2)"></i></span><div><b>Verde: recién guardado</b><small>Días 1 y 2. Comer con tranquilidad.</small></div></div>
+            <div class="color"><span class="punto"><i style="background:var(--amarillo)"></i></span><div><b>Amarillo: cómelo pronto</b><small>Días 3 y 4. Comerlo primero.</small></div></div>
+            <div class="color"><span class="punto"><i style="background:var(--rojo)"></i></span><div><b>Rojo: revísalo</b><small>Del día 5 en adelante, o antes si se calentó. Revisar olor y aspecto; si hay duda, tirarlo.</small></div></div>
+          </div>
+          <h3 style="margin:26px 0 12px;color:var(--verde)">En seis pasos</h3>
+          <ol class="pasos">
+            <li>Guarda la comida en el recipiente y ciérralo.</li>
+            <li>Quita el seguro rojo de la cubierta.</li>
+            <li>Coloca la pieza interior dentro, pegada a la pared, y la cubierta por fuera, frente a ella.</li>
+            <li>Presiona la cubierta hasta escuchar el «clic». La ventana se pone verde.</li>
+            <li>Revisa el color cada vez que abras la refrigeradora.</li>
+            <li>Cuando se acabe la comida, gira la tapa trasera un cuarto de vuelta y cambia la pastilla.</li>
+          </ol>
+          <p class="nota">Fresh Check es una guía de tiempo y temperatura; no analiza la comida.</p>
+        </div>
+        <div class="foto-redonda"><img src="assets/como-funciona.jpg" alt="Mano presionando un indicador Fresh Check en un recipiente de vidrio con ensalada" width="1200" height="900" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proximamente" class="fondo-blanco">
+    <div class="contenedor proximo">
+      <div class="foto-redonda"><img src="assets/proximamente.jpg" alt="Fresh Check Bags con fresas y Fresh Check Containers con arroz y vegetales" width="1400" height="788" loading="lazy"></div>
+      <div>
+        <span class="etiqueta">Próximamente</span>
+        <h2 style="margin-top:12px">Fresh Check Bags y Containers</h2>
+        <p class="sub">Bolsas reutilizables y recipientes herméticos con el indicador integrado. La pastilla va por fuera y usa el mismo repuesto de seis pastillas.</p>
+        <p class="nota">Su lanzamiento dependerá de los resultados de la investigación de mercado.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="contenedor">
+    <div><b>Fresh Check</b> · Si está verde, está bien.<br>Proyecto académico · Universidad Galileo · Proyectos Empresariales 2</div>
+    <div>Pedidos también por WhatsApp Business.<br><span id="anio"></span> · Sitio en desarrollo</div>
+  </div>
+</footer>
+
+<div class="velo" id="velo"></div>
+<aside class="carrito" id="carrito" aria-label="Carrito de compras">
+  <div class="cab"><h3>Tu carrito</h3><button class="cerrar" id="cerrarCarrito" aria-label="Cerrar">×</button></div>
+  <div class="lineas" id="lineas"></div>
+  <div class="totales" id="totales"></div>
+</aside>
+
+<dialog id="dlgPedido">
+  <div class="modal" id="pasoDatos">
+    <h3>Datos del pedido</h3>
+    <p class="sub">Completa tus datos para registrar el pedido. Te contactaremos para confirmar la entrega.</p>
+    <form id="formPedido" novalidate>
+      <div class="campos">
+        <div class="ancho"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" autocomplete="name" required maxlength="80"><span class="error-campo"></span></div>
+        <div><label for="telefono">Teléfono</label><input id="telefono" name="telefono" inputmode="tel" autocomplete="tel" placeholder="5555 5555" required maxlength="15"><span class="error-campo"></span></div>
+        <div><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" required maxlength="100"><span class="error-campo"></span></div>
+        <div><label for="entrega">Entrega</label>
+          <select id="entrega" name="entrega" required>
+            <option value="domicilio">Envío a domicilio</option>
+            <option value="recoger">Recoger en punto de entrega</option>
+          </select><span class="error-campo"></span></div>
+        <div><label for="zona">Zona</label>
+          <select id="zona" name="zona" required>
+            <option value="">Selecciona</option>
+            <option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option>Zona 16</option><option>Otra zona</option>
+          </select><span class="error-campo"></span></div>
+        <div class="ancho" id="grupoDireccion"><label for="direccion">Dirección</label><input id="direccion" name="direccion" autocomplete="street-address" maxlength="160"><span class="error-campo"></span></div>
+        <div class="ancho"><label for="pago">Forma de pago</label>
+          <select id="pago" name="pago" required>
+            <option value="contra_entrega">Pago contra entrega (efectivo o tarjeta)</option>
+            <option value="transferencia">Transferencia bancaria (te enviamos los datos)</option>
+          </select><span class="error-campo"></span></div>
+        <div class="ancho"><label for="notas">Notas (opcional)</label><textarea id="notas" name="notas" rows="2" maxlength="300"></textarea></div>
+        <div class="ancho"><label class="chk"><input type="checkbox" id="acepto" required> Acepto que mis datos se usen solo para gestionar este pedido.</label><span class="error-campo" id="errAcepto"></span></div>
+      </div>
+      <div class="resumen" id="resumenPedido"></div>
+      <div class="acciones">
+        <button type="button" class="btn sec" id="cancelarPedido">Volver</button>
+        <button type="submit" class="btn" id="enviarPedido">Confirmar pedido</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal" id="pasoOk" hidden>
+    <div class="ok-icono"><i></i></div>
+    <h3>¡Pedido registrado!</h3>
+    <p class="sub">Tu número de pedido es <span class="num-pedido" id="numPedido"></span></p>
+    <div class="resumen" id="resumenFinal"></div>
+    <p>Te contactaremos al <b id="telFinal"></b> para confirmar la entrega y el pago.</p>
+    <div class="desarrollo"><b>Página en desarrollo.</b> La Tienda Fresh Check se encuentra en etapa de desarrollo como parte de un proyecto académico. Tu pedido quedó registrado, pero la venta y la entrega se confirmarán directamente con nuestro equipo.</div>
+    <div class="acciones" style="margin-top:18px"><button class="btn" id="cerrarOk">Listo</button></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Configuración ----------
+  // Fecha de lanzamiento comercial (AAAA-MM-DD). Déjala vacía para no aplicar promociones.
+  var LANZAMIENTO = "";
+  var API_PEDIDO = "/api/pedido";
+
+  var PRODUCTOS = [
+    { id: "basico", nombre: "Fresh Check Básico", que: "3 indicadores con su pastilla. Para quien lo prueba por primera vez.", precio: 99, promo: 89, unidad: "Q33 por indicador", img: "assets/basico.jpg" },
+    { id: "hogar", nombre: "Fresh Check Hogar", que: "6 indicadores, 3 herméticos de vidrio y clips para cerrar bolsas abiertas, en caja de regalo.", precio: 299, promo: 270, unidad: "Set completo", img: "assets/hogar.jpg" },
+    { id: "repuesto", nombre: "Repuesto", que: "6 sobres sellados, con 1 pastilla cada uno. Para quien ya tiene el kit.", precio: 30, promo: 25, unidad: "Q5 por pastilla", img: "assets/repuesto.jpg" }
+  ];
+
+  // ---------- Promociones (según el plan de mercado) ----------
+  // Días 1 a 15: precios de lanzamiento. Días 16 a 30: 2 kits Básico por Q179.
+  function diaDeLanzamiento() {
+    if (!LANZAMIENTO) return 0;
+    var inicio = new Date(LANZAMIENTO + "T00:00:00");
+    var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return Math.floor((hoy - inicio) / 86400000) + 1;
+  }
+  function etapaPromo() {
+    var d = diaDeLanzamiento();
+    if (d >= 1 && d <= 15) return "lanzamiento";
+    if (d >= 16 && d <= 30) return "dos_basicos";
+    return "";
+  }
+  function precioUnitario(p) { return etapaPromo() === "lanzamiento" ? p.promo : p.precio; }
+
+  // ---------- Estado del carrito ----------
+  var CLAVE = "freshcheck_carrito";
+  var carrito = {};
+  try { carrito = JSON.parse(localStorage.getItem(CLAVE) || "{}") || {}; } catch (e) { carrito = {}; }
+  function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(carrito)); } catch (e) {} }
+
+  function calcular() {
+    var lineas = [], subtotal = 0, descuento = 0, unidades = 0;
+    PRODUCTOS.forEach(function (p) {
+      var c = carrito[p.id] || 0;
+      if (c > 0) {
+        var pu = precioUnitario(p);
+        lineas.push({ id: p.id, nombre: p.nombre, cantidad: c, precio: pu, importe: pu * c });
+        subtotal += pu * c; unidades += c;
+      }
+    });
+    if (etapaPromo() === "dos_basicos" && (carrito.basico || 0) >= 2) {
+      descuento = Math.floor(carrito.basico / 2) * (2 * 99 - 179);
+    }
+    return { lineas: lineas, subtotal: subtotal, descuento: descuento, total: subtotal - descuento, unidades: unidades };
+  }
+  function q(n) { return "Q" + n.toFixed(2).replace(/\.00$/, ""); }
+
+  // ---------- Pintar productos ----------
+  function pintarProductos() {
+    var etapa = etapaPromo(), aviso = document.getElementById("avisoPromo");
+    if (etapa === "lanzamiento") { aviso.style.display = "block"; aviso.textContent = "Promoción de lanzamiento: precios especiales durante los primeros 15 días."; }
+    else if (etapa === "dos_basicos") { aviso.style.display = "block"; aviso.textContent = "Oferta: lleva 2 kits Fresh Check Básico por Q179 (en lugar de Q198). El descuento se aplica en el carrito."; }
+    else aviso.style.display = "none";
+    var r = document.getElementById("rejilla"); r.innerHTML = "";
+    PRODUCTOS.forEach(function (p) {
+      var pu = precioUnitario(p);
+      var el = document.createElement("article");
+      el.className = "tarjeta";
+      el.innerHTML =
+        '<div class="icono"><img src="' + p.img + '" alt="' + p.nombre + '" width="900" height="900" loading="lazy"></div>' +
+        "<h3>" + p.nombre + "</h3>" +
+        '<p class="que">' + p.que + "</p>" +
+        '<div class="precio"><span class="actual">' + q(pu) + "</span>" +
+        (pu !== p.precio ? '<span class="antes">' + q(p.precio) + "</span>" : "") +
+        '<span class="unidad">' + p.unidad + "</span></div>" +
+        '<div class="cantidad"><button type="button" data-menos aria-label="Menos">−</button><input type="number" min="1" max="20" value="1" aria-label="Cantidad"><button type="button" data-mas aria-label="Más">+</button></div>' +
+        '<button class="btn" type="button" data-agregar>Agregar al carrito</button>';
+      var inp = el.querySelector("input");
+      el.querySelector("[data-menos]").onclick = function () { inp.value = Math.max(1, (+inp.value || 1) - 1); };
+      el.querySelector("[data-mas]").onclick = function () { inp.value = Math.min(20, (+inp.value || 1) + 1); };
+      el.querySelector("[data-agregar]").onclick = function () {
+        var n = Math.max(1, Math.min(20, parseInt(inp.value, 10) || 1));
+        carrito[p.id] = Math.min(50, (carrito[p.id] || 0) + n);
+        guardar(); pintarCarrito(); aviso_(n + " × " + p.nombre + " agregado"); inp.value = 1;
+        var badge = document.getElementById("cuenta"); badge.classList.remove("salto"); void badge.offsetWidth; badge.classList.add("salto");
+        var b = this; b.classList.add("agregado"); b.textContent = "✓ Agregado";
+        setTimeout(function () { b.classList.remove("agregado"); b.textContent = "Agregar al carrito"; }, 1200);
+      };
+      r.appendChild(el);
+    });
+  }
+
+  // ---------- Carrito ----------
+  function pintarCarrito() {
+    var c = calcular();
+    document.getElementById("cuenta").textContent = c.unidades;
+    var L = document.getElementById("lineas"), T = document.getElementById("totales");
+    if (!c.lineas.length) {
+      L.innerHTML = '<div class="vacio">Tu carrito está vacío.</div>';
+      T.innerHTML = '<a class="btn" href="#productos" id="irProductos">Ver productos</a>';
+      document.getElementById("irProductos").onclick = cerrarCarrito;
+      return;
+    }
+    L.innerHTML = "";
+    c.lineas.forEach(function (l) {
+      var d = document.createElement("div"); d.className = "linea";
+      d.innerHTML = '<div><div class="n">' + l.nombre + '</div><div class="ctl"><button type="button" data-m>−</button>' + l.cantidad + '<button type="button" data-p>+</button> × ' + q(l.precio) + '</div><button class="quitar" type="button" data-x>Quitar</button></div><div><b>' + q(l.importe) + "</b></div>";
+      d.querySelector("[data-m]").onclick = function () { carrito[l.id] = Math.max(0, l.cantidad - 1); if (!carrito[l.id]) delete carrito[l.id]; guardar(); pintarCarrito(); };
+      d.querySelector("[data-p]").onclick = function () { carrito[l.id] = Math.min(50, l.cantidad + 1); guardar(); pintarCarrito(); };
+      d.querySelector("[data-x]").onclick = function () { delete carrito[l.id]; guardar(); pintarCarrito(); };
+      L.appendChild(d);
+    });
+    T.innerHTML =
+      '<div class="fila"><span>Subtotal</span><span>' + q(c.subtotal) + "</span></div>" +
+      (c.descuento ? '<div class="fila desc"><span>Oferta 2 Básicos por Q179</span><span>−' + q(c.descuento) + "</span></div>" : "") +
+      '<div class="fila total"><span>Total</span><span>' + q(c.total) + "</span></div>" +
+      '<button class="btn" type="button" id="irPedido">Hacer pedido</button>';
+    document.getElementById("irPedido").onclick = abrirPedido;
+  }
+  function abrirCarrito() { document.getElementById("carrito").classList.add("abierto"); document.getElementById("velo").classList.add("abierto"); }
+  function cerrarCarrito() { document.getElementById("carrito").classList.remove("abierto"); document.getElementById("velo").classList.remove("abierto"); }
+  document.getElementById("abrirCarrito").onclick = abrirCarrito;
+  document.getElementById("cerrarCarrito").onclick = cerrarCarrito;
+  document.getElementById("velo").onclick = cerrarCarrito;
+
+  // ---------- Pedido ----------
+  var dlg = document.getElementById("dlgPedido"), form = document.getElementById("formPedido");
+  function resumenHTML(c) {
+    var h = "";
+    c.lineas.forEach(function (l) { h += '<div class="fila"><span>' + l.cantidad + " × " + l.nombre + "</span><span>" + q(l.importe) + "</span></div>"; });
+    if (c.descuento) h += '<div class="fila"><span>Descuento oferta</span><span>−' + q(c.descuento) + "</span></div>";
+    h += '<div class="fila" style="font-weight:800;color:var(--verde);margin-top:6px"><span>Total</span><span>' + q(c.total) + "</span></div>";
+    return h;
+  }
+  function abrirPedido() {
+    var c = calcular(); if (!c.lineas.length) return;
+    document.getElementById("resumenPedido").innerHTML = resumenHTML(c);
+    document.getElementById("pasoDatos").hidden = false; document.getElementById("pasoOk").hidden = true;
+    cerrarCarrito();
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  function cerrarDlg() { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+  document.getElementById("cancelarPedido").onclick = function () { cerrarDlg(); abrirCarrito(); };
+  document.getElementById("cerrarOk").onclick = cerrarDlg;
+
+  var entrega = document.getElementById("entrega");
+  entrega.onchange = function () { document.getElementById("grupoDireccion").style.display = entrega.value === "domicilio" ? "" : "none"; };
+
+  function marcar(id, msg) {
+    var el = document.getElementById(id), span = el.parentNode.querySelector(".error-campo");
+    if (span) span.textContent = msg || "";
+    el.setAttribute("aria-invalid", msg ? "true" : "false");
+    return !msg;
+  }
+  function validar() {
+    var ok = true, v = function (id) { return document.getElementById(id).value.trim(); };
+    ok = marcar("nombre", v("nombre").length >= 3 ? "" : "Escribe tu nombre completo.") && ok;
+    ok = marcar("telefono", /^\d{8}$/.test(v("telefono").replace(/[\s-]/g, "")) ? "" : "Escribe un teléfono de 8 dígitos.") && ok;
+    ok = marcar("correo", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("correo")) ? "" : "Escribe un correo válido.") && ok;
+    ok = marcar("zona", v("zona") ? "" : "Selecciona una zona.") && ok;
+    if (entrega.value === "domicilio") ok = marcar("direccion", v("direccion").length >= 6 ? "" : "Escribe la dirección de entrega.") && ok;
+    else marcar("direccion", "");
+    var acepto = document.getElementById("acepto").checked;
+    document.getElementById("errAcepto").textContent = acepto ? "" : "Debes aceptar para continuar.";
+    return ok && acepto;
+  }
+
+  // Limpia el mensaje de error en cuanto el campo se corrige
+  form.addEventListener("input", function (ev) {
+    var t = ev.target, span = t.parentNode && t.parentNode.querySelector(".error-campo");
+    if (t.id === "acepto") { document.getElementById("errAcepto").textContent = ""; return; }
+    if (span) span.textContent = ""; t.removeAttribute("aria-invalid");
+  });
+  form.addEventListener("change", function (ev) { if (ev.target.id === "acepto") document.getElementById("errAcepto").textContent = ""; else { var s = ev.target.parentNode.querySelector(".error-campo"); if (s) s.textContent = ""; } });
+
+  function idLocal() {
+    var d = new Date(), p = function (n) { return String(n).padStart(2, "0"); };
+    return "FC-" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+  }
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    if (!validar()) return;
+    var c = calcular(), btn = document.getElementById("enviarPedido");
+    var datos = {
+      cliente: {
+        nombre: form.nombre.value.trim(), telefono: form.telefono.value.replace(/[\s-]/g, ""), correo: form.correo.value.trim(),
+        entrega: form.entrega.value, zona: form.zona.value, direccion: form.entrega.value === "domicilio" ? form.direccion.value.trim() : "", pago: form.pago.value, notas: form.notas.value.trim()
+      },
+      items: c.lineas.map(function (l) { return { id: l.id, cantidad: l.cantidad }; }),
+      lanzamiento: LANZAMIENTO
+    };
+    btn.disabled = true; btn.textContent = "Registrando…";
+    fetch(API_PEDIDO, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || "Error"); return j; }); })
+      .catch(function () { return { id: idLocal(), total: c.total, local: true }; })
+      .then(function (res) {
+        try {
+          var hist = JSON.parse(localStorage.getItem("freshcheck_pedidos") || "[]");
+          hist.push({ id: res.id, fecha: new Date().toISOString(), total: res.total, items: datos.items, registrado_en_servidor: !res.local });
+          localStorage.setItem("freshcheck_pedidos", JSON.stringify(hist));
+        } catch (e) {}
+        document.getElementById("numPedido").textContent = res.id;
+        document.getElementById("resumenFinal").innerHTML = resumenHTML(c);
+        document.getElementById("telFinal").textContent = datos.cliente.telefono;
+        document.getElementById("pasoDatos").hidden = true; document.getElementById("pasoOk").hidden = false;
+        carrito = {}; guardar(); pintarCarrito(); form.reset(); entrega.onchange();
+      })
+      .finally(function () { btn.disabled = false; btn.textContent = "Confirmar pedido"; });
+  });
+
+  // ---------- Otros ----------
+  function aviso_(t) { var el = document.getElementById("toast"); el.textContent = t; el.classList.add("ver"); clearTimeout(aviso_.t); aviso_.t = setTimeout(function () { el.classList.remove("ver"); }, 2000); }
+  document.getElementById("anio").textContent = new Date().getFullYear();
+
+
+  // ---------- Transiciones (UX) ----------
+  var barra = document.querySelector("header.barra");
+  window.addEventListener("scroll", function () { barra.classList.toggle("con-sombra", window.scrollY > 8); }, { passive: true });
+  var revelables = document.querySelectorAll("section h2, section .sub, .tarjeta, .color, .pasos li, .foto, .foto-redonda, .proximo > div");
+  if ("IntersectionObserver" in window) {
+    revelables.forEach(function (el, i) { el.classList.add("revelar"); el.style.transitionDelay = (i % 3) * 80 + "ms"; });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    revelables.forEach(function (el) { io.observe(el); });
+  }
+  var enlaces = document.querySelectorAll("nav.menu a");
+  if ("IntersectionObserver" in window) {
+    var io2 = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) enlaces.forEach(function (a) { a.classList.toggle("activo", a.getAttribute("href") === "#" + e.target.id); }); });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["productos", "como-funciona", "proximamente"].forEach(function (id) { io2.observe(document.getElementById(id)); });
+  }
+  pintarProductos(); pintarCarrito();
+})();
+</script>
+</body>
+</html>
