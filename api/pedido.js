@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
     telefono: texto(c.telefono, 15).replace(/[\s-]/g, ""),
     correo: texto(c.correo, 100),
     entrega: c.entrega === "recoger" ? "recoger" : "domicilio",
-    zona: texto(c.zona, 20),
+    zona: texto(c.zona, 40),
     direccion: texto(c.direccion, 160),
     pago: c.pago === "transferencia" ? "transferencia" : "contra_entrega",
     notas: texto(c.notas, 300)

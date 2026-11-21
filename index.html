@@ -146,6 +146,37 @@ footer a{color:#fff}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;opacity:0;transition:.25s;z-index:90;pointer-events:none}
 .toast.ver{opacity:1;transform:translateX(-50%)}
 
+.valores{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:30px}
+@media (max-width:860px){.valores{grid-template-columns:1fr}}
+.valor{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:20px}
+.valor h3{margin:0 0 8px;color:var(--verde)}
+.valor p{margin:0;color:var(--gris)}
+.equipo-tit{color:var(--verde);margin:0 0 14px}
+.equipo{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.equipo li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:12px;padding:12px 14px;font-weight:600}
+.ini{width:42px;height:42px;border-radius:50%;background:var(--acento-claro);color:var(--acento-osc);display:grid;place-items:center;font-weight:800;flex:none}
+.dos-op{display:grid;grid-template-columns:1fr 1.15fr;gap:36px;align-items:start}
+@media (max-width:900px){.dos-op{grid-template-columns:1fr}}
+.beneficios{padding-left:20px;color:var(--gris);margin:0}
+.beneficios li{margin:6px 0}
+.tarjeta-form{background:var(--crema);border:1px solid var(--borde);border-radius:var(--radio);padding:22px}
+.tarjeta-form fieldset{border:0;padding:0;margin:0 0 16px}
+.tarjeta-form legend{font-weight:700;margin-bottom:8px;color:var(--verde)}
+.estrellas{display:inline-flex;flex-direction:row-reverse;gap:4px}
+.estrellas input{position:absolute;opacity:0;width:1px;height:1px}
+.estrellas label{font-size:2rem;line-height:1;color:#C9D3CB;cursor:pointer;margin:0;transition:color .15s,transform .15s}
+.estrellas label:hover,.estrellas label:hover~label,.estrellas input:checked~label{color:#E3B427}
+.estrellas label:hover{transform:scale(1.15)}
+.estrellas input:focus-visible+label{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{margin:0;font-weight:500}
+.chips input{position:absolute;opacity:0;width:1px;height:1px}
+.chips span{display:inline-block;border:1px solid var(--borde);background:#fff;border-radius:999px;padding:7px 14px;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s}
+.chips span:hover{border-color:var(--acento)}
+.chips input:checked+span{background:var(--acento);border-color:var(--acento);color:#fff}
+.chips input:focus-visible+span{outline:3px solid var(--acento);outline-offset:2px}
+.contador{display:block;text-align:right;color:var(--gris);font-size:.8rem}
+.gracias{margin-top:14px;background:var(--verde-claro);border:1px solid #c3d8c8;border-radius:12px;padding:12px 14px;color:var(--verde);animation:aparece .35s var(--ease)}
 /* ---- Transiciones y microinteracciones ---- */
 :root{--ease:cubic-bezier(.22,.61,.36,1);--ease-salida:cubic-bezier(.4,0,1,1)}
 .btn{transition:transform .18s var(--ease),background-color .18s var(--ease),box-shadow .18s var(--ease)}
@@ -204,6 +235,8 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
       <a href="#productos">Productos</a>
       <a href="#como-funciona">Cómo funciona</a>
       <a href="#proximamente">Próximamente</a>
+      <a href="#tu-opinion">Tu opinión</a>
+      <a href="#quienes-somos">Quiénes somos</a>
     </nav>
     <button class="carrito-btn" id="abrirCarrito" aria-label="Abrir carrito">Carrito <span class="cuenta" id="cuenta">0</span></button>
   </div>
@@ -273,15 +306,101 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
         <span class="etiqueta">Próximamente</span>
         <h2 style="margin-top:12px">Fresh Check Bags y Containers</h2>
         <p class="sub">Bolsas reutilizables y recipientes herméticos con el indicador integrado. La pastilla va por fuera y usa el mismo repuesto de seis pastillas.</p>
-        <p class="nota">Su lanzamiento dependerá de los resultados de la investigación de mercado.</p>
       </div>
+    </div>
+  </section>
+  <section id="tu-opinion" class="fondo-blanco">
+    <div class="contenedor dos-op">
+      <div>
+        <span class="etiqueta">Tu opinión importa</span>
+        <h2 style="margin-top:12px">Ayúdanos a mejorar Fresh Check</h2>
+        <p class="sub">Responde en menos de un minuto. Tus respuestas nos ayudan a decidir precios, presentaciones y en qué zonas llegar primero.</p>
+        <ul class="beneficios">
+          <li>Anónimo si lo prefieres: nombre y correo son opcionales.</li>
+          <li>Usamos tus respuestas solo para mejorar el producto.</li>
+          <li>Si dejas tu correo, te avisamos de las novedades.</li>
+        </ul>
+      </div>
+      <form id="formOpinion" class="tarjeta-form" novalidate>
+        <fieldset class="estrellas-campo">
+          <legend>¿Qué te parece Fresh Check?</legend>
+          <div class="estrellas" role="radiogroup" aria-label="Calificación de 1 a 5">
+            <input type="radio" id="e5" name="calificacion" value="5"><label for="e5" title="Excelente">★</label>
+            <input type="radio" id="e4" name="calificacion" value="4"><label for="e4" title="Muy bueno">★</label>
+            <input type="radio" id="e3" name="calificacion" value="3"><label for="e3" title="Bueno">★</label>
+            <input type="radio" id="e2" name="calificacion" value="2"><label for="e2" title="Regular">★</label>
+            <input type="radio" id="e1" name="calificacion" value="1"><label for="e1" title="Malo">★</label>
+          </div>
+          <span class="error-campo" id="errEstrellas"></span>
+        </fieldset>
+        <fieldset>
+          <legend>¿Comprarías Fresh Check?</legend>
+          <div class="chips">
+            <label><input type="radio" name="compraria" value="Sí"><span>Sí</span></label>
+            <label><input type="radio" name="compraria" value="Tal vez"><span>Tal vez</span></label>
+            <label><input type="radio" name="compraria" value="No"><span>No</span></label>
+          </div>
+          <span class="error-campo" id="errCompraria"></span>
+        </fieldset>
+        <fieldset>
+          <legend>El kit Básico a Q99 te parece…</legend>
+          <div class="chips">
+            <label><input type="radio" name="precio" value="Barato"><span>Barato</span></label>
+            <label><input type="radio" name="precio" value="Justo"><span>Justo</span></label>
+            <label><input type="radio" name="precio" value="Caro"><span>Caro</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>¿Qué presentaciones te interesan?</legend>
+          <div class="chips">
+            <label><input type="checkbox" name="presentaciones" value="Fresh Check Básico"><span>Básico</span></label>
+            <label><input type="checkbox" name="presentaciones" value="Fresh Check Hogar"><span>Hogar</span></label>
+            <label><input type="checkbox" name="presentaciones" value="Repuesto"><span>Repuesto</span></label>
+            <label><input type="checkbox" name="presentaciones" value="Fresh Check Bags"><span>Bags</span></label>
+            <label><input type="checkbox" name="presentaciones" value="Fresh Check Containers"><span>Containers</span></label>
+          </div>
+        </fieldset>
+        <div class="campos">
+          <div><label for="opConocio">¿Cómo nos conociste?</label>
+            <select id="opConocio" name="conocio"><option value="">Selecciona</option><option>Redes sociales</option><option>Supermercado</option><option>Recomendación</option><option>Creador de contenido</option><option>Otro</option></select></div>
+          <div><label for="opZona">Zona o municipio</label>
+            <select id="opZona" name="zona"><option value="">Selecciona</option>
+            <optgroup label="Ciudad de Guatemala"><option>Zona 1</option><option>Zona 2</option><option>Zona 3</option><option>Zona 4</option><option>Zona 5</option><option>Zona 6</option><option>Zona 7</option><option>Zona 8</option><option>Zona 9</option><option>Zona 10</option><option>Zona 11</option><option>Zona 12</option><option>Zona 13</option><option>Zona 14</option><option>Zona 15</option><option>Zona 16</option><option>Zona 17</option><option>Zona 18</option><option>Zona 19</option><option>Zona 21</option><option>Zona 24</option><option>Zona 25</option></optgroup>
+            <optgroup label="Municipios del departamento de Guatemala"><option>Amatitlán</option><option>Chinautla</option><option>Chuarrancho</option><option>Fraijanes</option><option>Mixco</option><option>Palencia</option><option>San José del Golfo</option><option>San José Pinula</option><option>San Juan Sacatepéquez</option><option>San Miguel Petapa</option><option>San Pedro Ayampuc</option><option>San Pedro Sacatepéquez</option><option>San Raymundo</option><option>Santa Catarina Pinula</option><option>Villa Canales</option><option>Villa Nueva</option></optgroup></select></div>
+          <div><label for="opNombre">Nombre (opcional)</label><input id="opNombre" name="nombre" maxlength="80" autocomplete="name"></div>
+          <div><label for="opCorreo">Correo (opcional)</label><input id="opCorreo" name="correo" type="email" maxlength="100" autocomplete="email"><span class="error-campo"></span></div>
+          <div class="ancho"><label for="opComentario">Comentario o sugerencia</label><textarea id="opComentario" name="comentario" rows="3" maxlength="500" placeholder="¿Qué mejorarías? ¿Qué alimentos guardarías con Fresh Check?"></textarea><small class="contador" id="contador">0 / 500</small></div>
+        </div>
+        <button type="submit" class="btn" id="enviarOpinion" style="width:100%;margin-top:8px">Enviar opinión</button>
+        <div class="gracias" id="graciasOpinion" hidden role="status"><b>¡Gracias por tu opinión!</b> La tomaremos en cuenta para mejorar Fresh Check.</div>
+      </form>
+    </div>
+  </section>
+
+  <section id="quienes-somos">
+    <div class="contenedor">
+      <h2>Quiénes somos</h2>
+      <p class="sub">Fresh Check nació en 2026 en la ciudad de Guatemala, a partir de una pregunta que se repite en muchas cocinas: «¿esto todavía se puede comer?». Somos un equipo guatemalteco que quiere ayudar a los hogares a organizar mejor sus alimentos, aprovechar sus compras y tirar menos comida.</p>
+      <div class="valores">
+        <div class="valor"><h3>Misión</h3><p>Ofrecer a los hogares guatemaltecos una herramienta sencilla, sin tecnología complicada, para saber qué alimentos consumir primero y reducir el desperdicio de comida.</p></div>
+        <div class="valor"><h3>Visión</h3><p>Ser, para 2030, la marca de referencia en Centroamérica en soluciones prácticas para conservar y organizar los alimentos en el hogar.</p></div>
+        <div class="valor"><h3>Valores</h3><p>Sencillez en todo lo que hacemos, respeto por la comida y por el dinero de las familias, responsabilidad con el medio ambiente y honestidad sobre lo que nuestro producto hace y no hace.</p></div>
+      </div>
+      <h3 class="equipo-tit">Equipo fundador</h3>
+      <ul class="equipo">
+        <li><span class="ini">RC</span>Rodrigo Enoc Cabrera Rosales</li>
+        <li><span class="ini">HH</span>Hissia Alejandra Hernández Pelén</li>
+        <li><span class="ini">EM</span>Emely Guisell Marroquín Gómez</li>
+        <li><span class="ini">LM</span>Lesly Paola Mus Morales</li>
+        <li><span class="ini">FS</span>Fernando Daniel Sinay Veliz</li>
+      </ul>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="contenedor">
-    <div><b>Fresh Check</b> · Si está verde, está bien.<br>Proyecto académico · Universidad Galileo · Proyectos Empresariales 2</div>
+    <div><b>Fresh Check</b> · Si está verde, está bien.<br>Proyecto académico · Universidad Galileo · Mercadeo Estratégico</div>
     <div>Pedidos también por WhatsApp Business.<br><span id="anio"></span> · Sitio en desarrollo</div>
   </div>
 </footer>
@@ -307,12 +426,13 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
             <option value="domicilio">Envío a domicilio</option>
             <option value="recoger">Recoger en punto de entrega</option>
           </select><span class="error-campo"></span></div>
-        <div><label for="zona">Zona</label>
+        <div><label for="zona">Zona o municipio</label>
           <select id="zona" name="zona" required>
             <option value="">Selecciona</option>
-            <option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option>Zona 16</option><option>Otra zona</option>
+            <optgroup label="Ciudad de Guatemala"><option>Zona 1</option><option>Zona 2</option><option>Zona 3</option><option>Zona 4</option><option>Zona 5</option><option>Zona 6</option><option>Zona 7</option><option>Zona 8</option><option>Zona 9</option><option>Zona 10</option><option>Zona 11</option><option>Zona 12</option><option>Zona 13</option><option>Zona 14</option><option>Zona 15</option><option>Zona 16</option><option>Zona 17</option><option>Zona 18</option><option>Zona 19</option><option>Zona 21</option><option>Zona 24</option><option>Zona 25</option></optgroup>
+            <optgroup label="Municipios del departamento de Guatemala"><option>Amatitlán</option><option>Chinautla</option><option>Chuarrancho</option><option>Fraijanes</option><option>Mixco</option><option>Palencia</option><option>San José del Golfo</option><option>San José Pinula</option><option>San Juan Sacatepéquez</option><option>San Miguel Petapa</option><option>San Pedro Ayampuc</option><option>San Pedro Sacatepéquez</option><option>San Raymundo</option><option>Santa Catarina Pinula</option><option>Villa Canales</option><option>Villa Nueva</option></optgroup>
           </select><span class="error-campo"></span></div>
-        <div class="ancho" id="grupoDireccion"><label for="direccion">Dirección</label><input id="direccion" name="direccion" autocomplete="street-address" maxlength="160"><span class="error-campo"></span></div>
+        <div class="ancho" id="grupoDireccion"><label for="direccion">Dirección</label><input id="direccion" name="direccion" autocomplete="street-address" maxlength="160" placeholder="Calle, avenida, número, colonia o residencial"><span class="error-campo"></span></div>
         <div class="ancho"><label for="pago">Forma de pago</label>
           <select id="pago" name="pago" required>
             <option value="contra_entrega">Pago contra entrega (efectivo o tarjeta)</option>
@@ -497,7 +617,7 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
     ok = marcar("nombre", v("nombre").length >= 3 ? "" : "Escribe tu nombre completo.") && ok;
     ok = marcar("telefono", /^\d{8}$/.test(v("telefono").replace(/[\s-]/g, "")) ? "" : "Escribe un teléfono de 8 dígitos.") && ok;
     ok = marcar("correo", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("correo")) ? "" : "Escribe un correo válido.") && ok;
-    ok = marcar("zona", v("zona") ? "" : "Selecciona una zona.") && ok;
+    ok = marcar("zona", v("zona") ? "" : "Selecciona tu zona o municipio.") && ok;
     if (entrega.value === "domicilio") ok = marcar("direccion", v("direccion").length >= 6 ? "" : "Escribe la dirección de entrega.") && ok;
     else marcar("direccion", "");
     var acepto = document.getElementById("acepto").checked;
@@ -554,10 +674,45 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
   document.getElementById("anio").textContent = new Date().getFullYear();
 
 
+
+  // ---------- Tu opinión importa ----------
+  var fOp = document.getElementById("formOpinion");
+  var com = document.getElementById("opComentario"), cont = document.getElementById("contador");
+  com.addEventListener("input", function () { cont.textContent = com.value.length + " / 500"; });
+  fOp.addEventListener("change", function (ev) {
+    if (ev.target.name === "calificacion") document.getElementById("errEstrellas").textContent = "";
+    if (ev.target.name === "compraria") document.getElementById("errCompraria").textContent = "";
+  });
+  fOp.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var cal = fOp.querySelector('input[name="calificacion"]:checked');
+    var comp = fOp.querySelector('input[name="compraria"]:checked');
+    var correo = document.getElementById("opCorreo").value.trim();
+    var ok = true;
+    document.getElementById("errEstrellas").textContent = cal ? "" : "Elige una calificación."; if (!cal) ok = false;
+    document.getElementById("errCompraria").textContent = comp ? "" : "Elige una opción."; if (!comp) ok = false;
+    ok = marcar("opCorreo", !correo || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "" : "Escribe un correo válido o déjalo vacío.") && ok;
+    if (!ok) return;
+    var prec = fOp.querySelector('input[name="precio"]:checked');
+    var datos = {
+      calificacion: +cal.value, compraria: comp.value, precio: prec ? prec.value : "",
+      presentaciones: Array.prototype.map.call(fOp.querySelectorAll('input[name="presentaciones"]:checked'), function (x) { return x.value; }),
+      conocio: fOp.conocio.value, zona: fOp.zona.value, nombre: fOp.nombre.value.trim(), correo: correo, comentario: com.value.trim()
+    };
+    var btn = document.getElementById("enviarOpinion"); btn.disabled = true; btn.textContent = "Enviando…";
+    fetch("/api/opinion", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos) })
+      .catch(function () {})
+      .then(function () {
+        try { var h = JSON.parse(localStorage.getItem("freshcheck_opiniones") || "[]"); h.push(datos); localStorage.setItem("freshcheck_opiniones", JSON.stringify(h)); } catch (e) {}
+        fOp.reset(); cont.textContent = "0 / 500";
+        document.getElementById("graciasOpinion").hidden = false;
+        btn.textContent = "Enviar otra opinión"; btn.disabled = false;
+      });
+  });
   // ---------- Transiciones (UX) ----------
   var barra = document.querySelector("header.barra");
   window.addEventListener("scroll", function () { barra.classList.toggle("con-sombra", window.scrollY > 8); }, { passive: true });
-  var revelables = document.querySelectorAll("section h2, section .sub, .tarjeta, .color, .pasos li, .foto, .foto-redonda, .proximo > div");
+  var revelables = document.querySelectorAll("section h2, section .sub, .tarjeta, .color, .pasos li, .foto, .foto-redonda, .proximo > div, .valor, .equipo li, .tarjeta-form");
   if ("IntersectionObserver" in window) {
     revelables.forEach(function (el, i) { el.classList.add("revelar"); el.style.transitionDelay = (i % 3) * 80 + "ms"; });
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } }); }, { threshold: 0.12 });
@@ -568,7 +723,7 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--rojo);
     var io2 = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) enlaces.forEach(function (a) { a.classList.toggle("activo", a.getAttribute("href") === "#" + e.target.id); }); });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["productos", "como-funciona", "proximamente"].forEach(function (id) { io2.observe(document.getElementById(id)); });
+    ["productos", "como-funciona", "proximamente", "tu-opinion", "quienes-somos"].forEach(function (id) { io2.observe(document.getElementById(id)); });
   }
   pintarProductos(); pintarCarrito();
 })();
